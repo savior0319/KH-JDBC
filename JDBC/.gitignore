@@ -1,0 +1,39 @@
+# compile exception
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# log exception
+*.log
+
+# OS system file exception
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# project file exception
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+.project
+.externalToolBuilders/
+*.launch
+.classpath
+.factorypath
+.buildpath
+.target
