@@ -8,7 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import kh.java.jdbc.model.vo.Member;
-import oracle.net.aso.r;
 
 public class MemberDAO {
 
@@ -25,10 +24,11 @@ public class MemberDAO {
 	public MemberDAO() {
 	}
 
-	public void selectAll() {
+	public ArrayList<Member> selectAll() {
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rset = null;
+		ArrayList<Member> aList = new ArrayList<Member>();
 
 		try {
 			// 1. 드라이버 등록
@@ -48,8 +48,6 @@ public class MemberDAO {
 
 			// rset.next() -> next 메소드는 다음 행을 가리키는 메소드. 다음행을 가리켰을 때 있으면 true 없으면 false
 
-			ArrayList<Member> aList = new ArrayList<Member>();
-
 			while (rset.next()) {
 				Member m = new Member(); // 값을 담을 Member 객체
 				m.setMemberName(rset.getString("member_id"));
@@ -64,11 +62,22 @@ public class MemberDAO {
 				m.setEnrollDate(rset.getDate("enroll_date"));
 				aList.add(m);
 			}
-
+			
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
+		} finally {
+			try {
+				rset.close();
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+			}
 		}
+		// System.out.println(aList.get(0).getMemberName());
+		// System.out.println(aList.get(5).getMemberName());
+		return aList;
 	}
 }
