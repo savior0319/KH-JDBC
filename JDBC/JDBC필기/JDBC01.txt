@@ -41,3 +41,32 @@
 5. 결과 받기 (Result Set)
 
 6. 닫기 (Close - 세션 해제)
+
+
+### DriverManager ###
+-> 데이터 원본에 JDBC 드라이버를 통하여 커넥션을 만드는 역할을 함
+-> Class, forName() 메소드 통해 생성되며, 반드시 예외처리를 해야 함
+-> 직접 객체 생성 불가능하고, getConnection() 메소드를 사용하여 객체를 생성할 수 있음
+
+## Connection ##
+-> Connection 객체는 특정 데이터 원본과 연결된 커넥션을 나타냄
+-> Statement 객체를 생성할 때도 Connection 객체를 사용하여 createStatement()
+메소드를 호출하여 생성 함
+-> SQL 문장을 실행시키기 전에 우선 Connection 객체가 있어야 DBMS와 연결이 가능 함
+
+## Statement ##
+-> Connection 객체를 이용하여 만들어지는 객체
+-> Connection 클래스의 createStatement() 메소드를 호출하여 얻어지며,
+생성된 Statement 객체로 질의문장을 인자로 담아(String 형태)
+executeQuery() 메소드를 호출하여 SQL 질의를 수행함
+
+## PreparedStatement ##
+-> Connection 객체의 PreparedStatement() 메소드를 사용하여 객체를 생성 함
+-> SQL 문장이 미리 컴파일 되고, 실행 시간동안 인수 값을 위한 공간을 확보 할 수 있다는 점에서
+Statement 방식과는 다름
+-> 각 각의 인수에 대해 위치홀더('?' 라는 홀더 값)를 사용하여 SQL 문장을 정의 할 수 있게 해줌
+
+## Result Set ##
+-> SELECT문을 사용한 질의 성공 시 ResultSet을 반환 함
+-> ResultSet을은 SQL 질의에 의해 생성된 테이블을 담고 있으며,
+'커서(Cursor)''라는 것을 가지고 특정 행에 대한 참조를 조작 함
