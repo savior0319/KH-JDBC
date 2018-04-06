@@ -25,5 +25,19 @@
 	각 다른 애플리케이션끼리의 문자를 인식할 수 있음
 	- 일반적으로 DB의 문자 인코딩 방식으로 맞추어 줌(Oracle은 UTF-8방식)
 
+@ JDBC CODING 절차
 
+1. Driver 등록
+		- 이클립스에서 DBMS와 연동하기 위해서는 첫번째로 Driver 등록을 해야 함
+			(DriverManager)
+2. DBMS연결 (Connection)
 
+3. Statement 생성 - 작성한 쿼리문을 전송할 객체 (저장 및 전송 역할 객체)
+						- 2가지 방식이 있음
+						-> Statement 방식
+						-> PreparedStatement 방식
+4. SQL 전송
+
+5. 결과 받기 (Result Set)
+
+6. 닫기 (Close - 세션 해제)
