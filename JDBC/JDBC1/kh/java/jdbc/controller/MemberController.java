@@ -40,4 +40,19 @@ public class MemberController {
 			return aList;
 		}
 	}
+
+	public int insertMember(Member m) {
+		int result = mDAO.insertMember(m);
+		return result;
+	}
+
+	public int updateMember(Member me) {
+		int result = mDAO.updateMember(me);
+		return result;
+	}
+
+	public int deleteMember(String memberId) {
+		int result = mDAO.deleteMember(memberId);
+		return result;
+	}
 }

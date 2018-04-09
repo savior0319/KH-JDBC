@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
 
+import javax.management.relation.RoleUnresolvedList;
+
 import kh.java.jdbc.controller.MemberController;
 import kh.java.jdbc.model.vo.Member;
 
@@ -88,11 +90,13 @@ public class MemberMenu {
 			System.out.println("비밀번호 -> " + m.getMemberPwd());
 			System.out.println("이름 -> " + m.getMemberName());
 			System.out.println("나이 -> " + m.getAge());
-			if(m.getGender().equals("M")) {
-			System.out.println("성별 -> 남자");
-			} else 	System.out.println("성별 -> 여자");
+			if (m.getGender().equals("M")) {
+				System.out.println("성별 -> 남");
+			} else
+				System.out.println("성별 -> 여");
 			System.out.println("이메일 -> " + m.getEmail());
 			System.out.println("주소 -> " + m.getAdress());
+			System.out.println("전화번호 -> " + m.getPhone());
 			System.out.println("취미 -> " + m.getHobby());
 			System.out.println("가입일 -> " + m.getEnrollDate());
 			System.out.println("─────────────────────────────────");
@@ -102,10 +106,9 @@ public class MemberMenu {
 	}
 
 	public void selectName() {
-		ArrayList<Member> aList = new ArrayList<Member>();
 		System.out.print("검색 할 이름 입력 -> ");
 		String memberName = sc.next();
-		aList = mc.selectName(memberName);
+		ArrayList<Member> aList = mc.selectName(memberName);
 		if (aList == null) {
 			System.out.println("\n※ 검색 한 이름이 없습니다");
 		} else {
@@ -121,14 +124,78 @@ public class MemberMenu {
 	}
 
 	public void insertMember() {
+		Member m = new Member();
+		System.out.println("───────────회원가입──────────");
+		System.out.print("아이디 입력 -> ");
+		m.setMemberId(sc.next());
+		System.out.print("비밀번호 입력 -> ");
+		m.setMemberPwd(sc.next());
+		System.out.print("이름 입력 -> ");
+		m.setMemberName(sc.next());
+		System.out.print("나이 입력 -> ");
+		m.setAge(sc.nextInt());
+		System.out.print("이메일 입력 -> ");
+		m.setEmail(sc.next());
+		System.out.print("성별 입력(남 or 여)-> ");
+		String gender = sc.next();
+		if (gender.equals("남")) {
+			m.setGender("M");
+		} else if (gender.equals("여")) {
+			m.setGender("F");
+		}
+		System.out.print("전화번호 입력( - 제외) -> ");
+		m.setPhone(sc.next());
+		System.out.print("주소 입력 -> ");
+		sc.nextLine();
+		m.setAdress(sc.nextLine());
+		System.out.print("취미 입력 -> ");
+		m.setHobby(sc.next());
 
+		int result = mc.insertMember(m);
+		if (result != 0) {
+			System.out.println("※ 회원가입이 완료 되었습니다");
+		} else
+			System.out.println("※ 회원가입에 실패했습니다");
 	}
 
 	public void updateMember() {
-
+		Member m = null;
+		System.out.print("변경 할 회원 아이디 입력 -> ");
+		String memberId = sc.next();
+		m = mc.selectOneId(memberId);
+		if (m != null) {
+			Member me = new Member();
+			me.setMemberId(memberId);
+			System.out.println("변경할 암호 입력 -> ");
+			me.setMemberPwd(sc.next());
+			System.out.println("변경할 이메일 입력 -> ");
+			me.setEmail(sc.next());
+			System.out.println("변경할 전화번호 입력 -> ");
+			me.setPhone(sc.next());
+			sc.nextLine();
+			System.out.println("변경할 주소 입력 -> ");
+			me.setAdress(sc.nextLine());
+			int result = mc.updateMember(me);
+			if (result != 0) {
+				System.out.println("※ 변경완료");
+			} else
+				System.out.println("※ 변경실패");
+		} else
+			System.out.println("\n※ 변경 할 회원이 없습니다");
 	}
 
 	public void deleteMember() {
-
+		Member m = null;
+		System.out.print("삭제 할 회원 아이디 입력 -> ");
+		String memberId = sc.next();
+		m = mc.selectOneId(memberId);
+		if (m != null) {
+			int result = mc.deleteMember(memberId);
+			if (result != 0) {
+				System.out.println("※ 삭제완료");
+			} else
+				System.out.println("※ 삭제실패");
+		} else
+			System.out.println("\n※ 삭제 할 회원이 없습니다");
 	}
 }
