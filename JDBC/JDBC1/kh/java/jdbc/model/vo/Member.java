@@ -18,6 +18,12 @@ public class Member {
 	public Member() {
 	}
 
+	@Override
+	public String toString() {
+		return memberId + "  " + memberPwd + "  " + memberName + "  " + gender + "  " + age + "  " + email + "  "
+				+ adress + "  " + hobby + "  " + enrollDate;
+	}
+
 	private String memberId;
 	private String memberPwd;
 	private String memberName;
