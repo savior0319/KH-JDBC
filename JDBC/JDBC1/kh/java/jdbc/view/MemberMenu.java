@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
 
-import javax.management.relation.RoleUnresolvedList;
-
 import kh.java.jdbc.controller.MemberController;
 import kh.java.jdbc.model.vo.Member;
 
@@ -56,9 +54,11 @@ public class MemberMenu {
 					System.out.println("\n※ 종료합니다");
 					System.exit(0);
 				} else if (yn == 'n') {
+					System.out.println("\n※ 종료를 취소했습니다");
 					break;
 				} else
 					System.out.println("\n※   y 또는 n만 입력해주세요");
+				break;
 			default:
 				System.out.println("\n번호을 잘못 선택 하셨습니다");
 				break;
@@ -164,18 +164,18 @@ public class MemberMenu {
 		String memberId = sc.next();
 		m = mc.selectOneId(memberId);
 		if (m != null) {
-			Member me = new Member();
-			me.setMemberId(memberId);
+			Member m1 = new Member();
+			m1.setMemberId(memberId);
 			System.out.println("변경할 암호 입력 -> ");
-			me.setMemberPwd(sc.next());
+			m1.setMemberPwd(sc.next());
 			System.out.println("변경할 이메일 입력 -> ");
-			me.setEmail(sc.next());
+			m1.setEmail(sc.next());
 			System.out.println("변경할 전화번호 입력 -> ");
-			me.setPhone(sc.next());
+			m1.setPhone(sc.next());
 			sc.nextLine();
 			System.out.println("변경할 주소 입력 -> ");
-			me.setAdress(sc.nextLine());
-			int result = mc.updateMember(me);
+			m1.setAdress(sc.nextLine());
+			int result = mc.updateMember(m1);
 			if (result != 0) {
 				System.out.println("※ 변경완료");
 			} else
@@ -189,12 +189,23 @@ public class MemberMenu {
 		System.out.print("삭제 할 회원 아이디 입력 -> ");
 		String memberId = sc.next();
 		m = mc.selectOneId(memberId);
+		int result = 0;
 		if (m != null) {
-			int result = mc.deleteMember(memberId);
-			if (result != 0) {
+			System.out.print("정말로 탈퇴 하시겠습니까? (y/n) -> ");
+			char ch = sc.next().charAt(0);
+			if (ch == 'y') {
+				result = mc.deleteMember(memberId);
+			} else if (ch == 'n') {
+				System.out.println("※ 삭제를 취소했습니다");
+				result = -1;
+			} else {
+				System.out.println("※ 잘못 입력했습니다");
+			}
+			if (result > 0) {
 				System.out.println("※ 삭제완료");
-			} else
+			} else if (result == 0) {
 				System.out.println("※ 삭제실패");
+			}
 		} else
 			System.out.println("\n※ 삭제 할 회원이 없습니다");
 	}
