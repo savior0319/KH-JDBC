@@ -59,9 +59,9 @@ public class LibraryDAO {
 		return aList;
 	}
 
-	public LibraryVO rentSearchId(String userID) {
+	public ArrayList<LibraryVO> rentSearchId(String userID) {
 
-		LibraryVO lvo = null;
+		ArrayList<LibraryVO> aList = new ArrayList<LibraryVO>();
 
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
@@ -78,11 +78,13 @@ public class LibraryDAO {
 			rs = stmt.executeQuery(query);
 
 			while (rs.next()) {
+				LibraryVO lvo = new LibraryVO();
 				lvo = new LibraryVO();
 				lvo.setLeaseNo(rs.getInt("LEASE_NO"));
 				lvo.setUserId(rs.getString("USER_ID"));
 				lvo.setCvoUserName(rs.getString("USER_NAME"));
 				lvo.setBvoBookName(rs.getString("BOOK_NAME"));
+				aList.add(lvo);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -95,7 +97,7 @@ public class LibraryDAO {
 				e.printStackTrace();
 			}
 		}
-		return lvo;
+		return aList;
 	}
 
 	public LibraryVO rentSearchBookName(String bookName) {

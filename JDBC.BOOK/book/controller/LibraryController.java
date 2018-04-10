@@ -19,7 +19,7 @@ public class LibraryController {
 			return lDao.rentManagerAll();
 	}
 
-	public LibraryVO rentSearchId(String userID) {
+	public ArrayList<LibraryVO> rentSearchId(String userID) {
 		return lDao.rentSearchId(userID);
 	}
 

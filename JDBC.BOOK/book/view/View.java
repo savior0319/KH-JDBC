@@ -4,15 +4,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
 
-import com.sun.org.apache.bcel.internal.generic.I2F;
-
 import book.controller.BookController;
 import book.controller.CustomerController;
 import book.controller.LibraryController;
 import book.model.VO.BookVO;
 import book.model.VO.CustomerVO;
 import book.model.VO.LibraryVO;
-import kh.java.jdbc.controller.MemberController;
 
 public class View {
 
@@ -377,22 +374,18 @@ public class View {
 		System.out.print("대여 조회를 할 회원 아이디 -> ");
 		String userId = sc.next();
 		CustomerVO cv = cc.customerSearchId(userId);
+		ArrayList<LibraryVO> aList = lc.rentSearchId(userId);
 		if (cv == null) {
 			System.out.println("\n※ 대여 조회를 할 '" + userId + "' 아이디를 가진 회원이 없습니다");
 		} else {
-			LibraryVO lvo = lc.rentSearchId(userId);
-			if (lvo == null) {
-				System.out.println("\n※ '" + userId + "' 회원의 대여 정보가 없습니다");
-			} else {
-				System.out.println("\n※ '" + userId + "' 회원의 대여 정보");
-				System.out.println("────────────────────────────────────────────");
-				System.out.println("대여번호 -> " + lvo.getLeaseNo());
-				System.out.println("아이디 -> " + lvo.getUserId());
-				System.out.println("이름 -> " + lvo.getCvoUserName());
-				System.out.println("책 이름 -> " + lvo.getBvoBookName());
-				System.out.println("────────────────────────────────────────────");
-				System.out.println("※ 조회 완료");
+			System.out.println("\n※ 대여 정보 조회");
+			System.out.println("────────────────────────────────" + "──────────────────────────────────────");
+			Iterator<LibraryVO> it = aList.iterator();
+			while (it.hasNext()) {
+				System.out.println(it.next().toString());
 			}
+			System.out.println("───────────────────────────────" + "───────────────────────────────────────");
+			System.out.println("※ 조회완료\n");
 		}
 	}
 
@@ -425,7 +418,7 @@ public class View {
 			lvo.setLeaseNo(sc.nextInt());
 			sc.nextLine();
 			System.out.print("책 이름 입력 -> ");
-			String bookName = sc.next();
+			String bookName = sc.nextLine();
 			BookVO bv = bc.searchBookName(bookName);
 			if (bv == null) {
 				System.out.println("\n※ 대여 할 책이 없습니다");
