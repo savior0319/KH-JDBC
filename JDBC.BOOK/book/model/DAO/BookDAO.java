@@ -138,7 +138,7 @@ public class BookDAO {
 	}
 
 	public int bookDelete(int bookCode) {
-		
+
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "STUDENT", "STUDENT");
@@ -148,9 +148,9 @@ public class BookDAO {
 		}
 
 		int result = 0;
-		
+
 		String query = "DELETE FROM BOOK WHERE BOOK_NO LIKE '" + bookCode + "'";
-		
+
 		try {
 			result = stmt.executeUpdate(query);
 
@@ -161,7 +161,7 @@ public class BookDAO {
 			}
 		} catch (Exception e) {
 			System.out.println("\n※ 현재 대여 중인 책은 삭제 불가능 합니다");
-			
+
 		} finally {
 			try {
 				stmt.close();
@@ -171,5 +171,40 @@ public class BookDAO {
 			}
 		}
 		return result;
+	}
+
+	public BookVO searchBookName(String bookName) {
+		
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "STUDENT", "STUDENT");
+			stmt = conn.createStatement();
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+
+		BookVO bv = null;
+		String query = "SELECT BOOK_NAME FROM BOOK WHERE BOOK_NAME LIKE '" + bookName + "'";
+
+		try {
+			rs = stmt.executeQuery(query);
+
+			while (rs.next()) {
+				bv = new BookVO();
+				bv.setBookName(rs.getString("BOOK_NAME"));
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rs.close();
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return bv;
 	}
 }

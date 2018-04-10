@@ -162,7 +162,7 @@ public class LibraryDAO {
 				conn.rollback();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("※ 대여 번호가 중복 됩니다");
 		} finally {
 			try {
 				stmt.close();

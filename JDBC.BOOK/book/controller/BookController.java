@@ -28,4 +28,8 @@ public class BookController {
 		return bDao.bookDelete(bookCode);
 	}
 
+	public BookVO searchBookName(String bookName) {
+		return bDao.searchBookName(bookName);
+	}
+
 }
