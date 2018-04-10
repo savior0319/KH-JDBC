@@ -423,13 +423,17 @@ public class View {
 			lvo.setLeaseNo(sc.nextInt());
 			sc.nextLine();
 			System.out.print("책 이름 입력 -> ");
-			lvo.setBvoBookName(sc.nextLine());
-			lvo.setUserId(userId);
-			int result = lc.rentInfoAdd(lvo);
-			if (result > 0) {
-				System.out.println("\n※ 대여를 완료 했습니다");
+			String bookName = sc.next();
+			LibraryVO lvo1 = lc.rentSearchBookName(bookName);
+			if (lvo1 == null) {
+				System.out.println("※ 대여 할 책이 없습니다");
 			} else {
-				System.out.println("\n※ 대여를 실패 했습니다");
+				int result = lc.rentInfoAdd(lvo);
+				if (result > 0) {
+					System.out.println("\n※ 대여를 완료 했습니다");
+				} else {
+					System.out.println("※ 대여를 실패 했습니다");
+				}
 			}
 		}
 	}
