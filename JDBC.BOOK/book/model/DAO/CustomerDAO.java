@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import book.model.VO.BookVO;
 import book.model.VO.CustomerVO;
 
 public class CustomerDAO {
@@ -148,8 +147,113 @@ public class CustomerDAO {
 		return cv;
 	}
 
-	public void customerSignUp(CustomerVO cv) {
-		
+	public int customerSignUp(CustomerVO cv) {
+
+		int result = 0;
+
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "STUDENT", "STUDENT");
+			stmt = conn.createStatement();
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+
+		String query = "INSERT INTO CUSTOMER VALUES(" + cv.getUserNo() + ",'" + cv.getUserId() + "','"
+				+ cv.getUserName() + "'," + cv.getUserAge() + ",'" + cv.getAddr() + "','" + cv.getGender()
+				+ "', SYSDATE)";
+
+		try {
+			result = stmt.executeUpdate(query);
+
+			if (result > 0) {
+				conn.commit();
+			} else {
+				conn.rollback();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
 	}
 
+	public int customerInfoUpdate(CustomerVO cVo) {
+
+		int result = 0;
+
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "STUDENT", "STUDENT");
+			stmt = conn.createStatement();
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+
+		String query = "UPDATE CUSTOMER SET USER_NAME = '" + cVo.getUserName() + "', ADDR = '" + cVo.getAddr()
+				+ "' WHERE USER_ID LIKE '" + cVo.getUserId() + "'";
+
+		try {
+			result = stmt.executeUpdate(query);
+
+			if (result > 0) {
+				conn.commit();
+			} else {
+				conn.rollback();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+
+	}
+
+	public int customerDelete(String userId) {
+
+		int result = 0;
+
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "STUDENT", "STUDENT");
+			stmt = conn.createStatement();
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+
+		String query = "DELETE FROM CUSTOMER WHERE USER_ID LIKE '" + userId + "'";
+
+		try {
+			result = stmt.executeUpdate(query);
+
+			if (result > 0) {
+				conn.commit();
+			} else {
+				conn.rollback();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+
+	}
 }

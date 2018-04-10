@@ -30,8 +30,16 @@ public class CustomerController {
 		return cDao.customerSearchId(userId);
 	}
 
-	public void customerSignUp(CustomerVO cv) {
-		cDao.customerSignUp(cv);
+	public int customerSignUp(CustomerVO cv) {
+		return cDao.customerSignUp(cv);
+	}
+
+	public int customerInfoUpdate(CustomerVO cVo) {
+		return cDao.customerInfoUpdate(cVo);
+	}
+
+	public int customerDelete(String userId) {
+		return cDao.customerDelete(userId);
 	}
 
 }

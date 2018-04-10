@@ -6,8 +6,10 @@ import java.util.Scanner;
 
 import book.controller.BookController;
 import book.controller.CustomerController;
+import book.controller.LibraryController;
 import book.model.VO.BookVO;
 import book.model.VO.CustomerVO;
+import book.model.VO.LibraryVO;
 import kh.java.jdbc.controller.MemberController;
 
 public class View {
@@ -15,6 +17,7 @@ public class View {
 	private Scanner sc = new Scanner(System.in);
 	private BookController bc = new BookController();
 	private CustomerController cc = new CustomerController();
+	private LibraryController lc = new LibraryController();
 
 	public View() {
 	}
@@ -253,18 +256,18 @@ public class View {
 
 	public void customerSignUp() {
 		CustomerVO cv = new CustomerVO();
-		System.out.println("회원 번호 입력 -> ");
+		System.out.print("회원 번호 입력 -> ");
 		cv.setUserNo(sc.nextInt());
-		System.out.println("회원 아이디 입력 -> ");
+		System.out.print("회원 아이디 입력 -> ");
 		cv.setUserId(sc.next());
-		System.out.println("회원 이름 입력 -> ");
+		System.out.print("회원 이름 입력 -> ");
 		cv.setUserName(sc.next());
-		System.out.println("회원 나이 입력 -> ");
+		System.out.print("회원 나이 입력 -> ");
 		cv.setUserAge(sc.nextInt());
 		sc.nextLine();
-		System.out.println("회원 주소 입력 -> ");
+		System.out.print("회원 주소 입력 -> ");
 		cv.setAddr(sc.nextLine());
-		System.out.println("회원 성별 입력(남/여) -> ");
+		System.out.print("회원 성별 입력(남/여) -> ");
 		String gender = sc.next();
 		if (gender.equals("남")) {
 			cv.setGender("M");
@@ -272,19 +275,162 @@ public class View {
 			cv.setGender("F");
 		} else
 			System.out.println("※ 잘못 입력했습니다");
-		
-		cc.customerSignUp(cv);
+
+		int result = cc.customerSignUp(cv);
+		if (result > 0) {
+			System.out.println("\n※ 가입 완료");
+		} else
+			System.out.println("\n※ 가입 실패");
 	}
 
 	public void customerInfoUpdate() {
+		System.out.print("변경 할 아이디 입력 -> ");
+		String userId = sc.next();
+		CustomerVO cv = cc.customerSearchId(userId);
+		if (cv == null) {
+			System.out.println("\n 변경 할 '" + userId + "' 아이디를 가진 회원이 없습니다");
+		} else {
+			CustomerVO cVo = new CustomerVO();
+			System.out.print("변경 할 이름 입력 -> ");
+			cVo.setUserName(sc.next());
+			System.out.print("변경 할 주소 입력 -> ");
+			sc.nextLine();
+			cVo.setAddr(sc.nextLine());
+			cVo.setUserId(userId);
 
+			int result = cc.customerInfoUpdate(cVo);
+			if (result > 0) {
+				System.out.println("\n※ '" + userId + "' 회원 정보 변경을 완료했습니다");
+			} else
+				System.out.println("\n※ '" + userId + "' 회원 정보 변경에 실패했습니다");
+		}
 	}
 
 	public void customerDelete() {
-
+		System.out.print("탈퇴 할 아이디 입력 -> ");
+		String userId = sc.next();
+		CustomerVO cv = cc.customerSearchId(userId);
+		if (cv == null) {
+			System.out.println("\n 탈퇴 할 '" + userId + "' 아이디를 가진 회원이 없습니다");
+		} else {
+			int result = cc.customerDelete(userId);
+			if (result > 0) {
+				System.out.println("\n※ '" + userId + "' 회원 정보 탈퇴를 완료했습니다");
+			} else
+				System.out.println("\n※ '" + userId + "' 회원 정보 탈퇴에 실패했습니다");
+		}
 	}
 
 	public void RepaintManager() {
+		while (true) {
+			System.out.println("\n대여 관리 서브 메뉴");
+			System.out.println("────────────────────");
+			System.out.println("1. 대여 관리 전체 조회");
+			System.out.println("2. 회원 아이디로 대여 조회");
+			System.out.println("3. 책 이름으로 대여 조회");
+			System.out.println("4. 대여정보 추가");
+			System.out.println("5. 메인 메뉴로 이동");
+			System.out.println("────────────────────");
+			System.out.print("메뉴 선택 -> ");
+			switch (sc.nextInt()) {
+			case 1:
+				rentManagerAll();
+				break;
+			case 2:
+				rentSearchId();
+				break;
+			case 3:
+				rentSearchBookName();
+				break;
+			case 4:
+				rentInfoAdd();
+				break;
+			case 5:
+				bookMenu();
+				break;
+			default:
+				System.out.println("\n※ 메뉴선택을 잘못 했습니다");
+				break;
+			}
+		}
+	}
 
+	public void rentManagerAll() {
+		ArrayList<LibraryVO> aList = lc.rentManagerAll();
+		if (aList == null) {
+			System.out.println("\n※ 대여 정보가 없습니다");
+		} else {
+			System.out.println("\n※ 대여 정보 조회");
+			System.out.println("────────────────────────────────" + "──────────────────────────────────────");
+			Iterator<LibraryVO> it = aList.iterator();
+			while (it.hasNext()) {
+				System.out.println(it.next().toString());
+			}
+			System.out.println("───────────────────────────────" + "───────────────────────────────────────");
+			System.out.println("※ 조회완료\n");
+		}
+	}
+
+	public void rentSearchId() {
+		System.out.print("대여 조회를 할 회원 아이디 -> ");
+		String userId = sc.next();
+		CustomerVO cv = cc.customerSearchId(userId);
+		if (cv == null) {
+			System.out.println("\n※ 대여 조회를 할 '" + userId + "' 아이디를 가진 회원이 없습니다");
+		} else {
+			LibraryVO lvo = lc.rentSearchId(userId);
+			if (lvo == null) {
+				System.out.println("\n※ '" + userId + "' 회원의 대여 정보가 없습니다");
+			} else {
+				System.out.println("\n※ '" + userId + "' 회원의 대여 정보");
+				System.out.println("────────────────────────────────────────────");
+				System.out.println("대여번호 -> " + lvo.getLeaseNo());
+				System.out.println("아이디 -> " + lvo.getUserId());
+				System.out.println("이름 -> " + lvo.getCvoUserName());
+				System.out.println("책 이름 -> " + lvo.getBvoBookName());
+				System.out.println("────────────────────────────────────────────");
+				System.out.println("※ 조회 완료");
+			}
+		}
+	}
+
+	public void rentSearchBookName() {
+		System.out.print("대여 조회를 할 책 이름 -> ");
+		String bookName = sc.next();
+		LibraryVO lvo = lc.rentSearchBookName(bookName);
+		if (lvo == null) {
+			System.out.println("\n※ '" + bookName + "' 책의 대여 정보가 없습니다");
+		} else {
+			System.out.println("\n※ '" + bookName + "' 책의 대여 정보");
+			System.out.println("────────────────────────────────────────────");
+			System.out.println("대여번호 -> " + lvo.getLeaseNo());
+			System.out.println("아이디 -> " + lvo.getUserId());
+			System.out.println("이름 -> " + lvo.getCvoUserName());
+			System.out.println("────────────────────────────────────────────");
+			System.out.println("※ 조회 완료");
+		}
+	}
+
+	public void rentInfoAdd() {
+		System.out.print("대여를 할 회원 아이디 -> ");
+		String userId = sc.next();
+		CustomerVO cv = cc.customerSearchId(userId);
+		if (cv == null) {
+			System.out.println("\n※ 대여를 할 '" + userId + "' 아이디를 가진 회원이 없습니다");
+		} else {
+			LibraryVO lvo = new LibraryVO();
+			System.out.print("대여 번호 입력 -> ");
+			lvo.setLeaseNo(sc.nextInt());
+			sc.nextLine();
+			System.out.print("책 이름 입력 -> ");
+			lvo.setBvoBookName(sc.nextLine());
+			lvo.setUserId(userId);
+			int result = lc.rentInfoAdd(lvo);
+			if (result > 0) {
+				System.out.println("\n※ 대여를 완료 했습니다");
+			} else {
+				System.out.println("\n※ 대여를 실패 했습니다");
+			}
+		}
 	}
 }
