@@ -428,7 +428,7 @@ public class View {
 			String bookName = sc.next();
 			BookVO bv = bc.searchBookName(bookName);
 			if (bv == null) {
-				System.out.println("※ 대여 할 책이 없습니다");
+				System.out.println("\n※ 대여 할 책이 없습니다");
 				System.out.println("※ 대여를 실패 했습니다");
 			} else {
 				lvo.setBvoBookName(bookName);
