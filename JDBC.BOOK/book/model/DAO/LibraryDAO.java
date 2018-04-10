@@ -151,7 +151,7 @@ public class LibraryDAO {
 
 		String query = "INSERT INTO LIBRARY VALUES(" + lvo.getLeaseNo()
 				+ ", (SELECT BOOK_NO FROM BOOK WHERE BOOK_NAME LIKE '" + lvo.getBvoBookName() + "'), '"
-				+ lvo.getUserId() + "', DEFAULT, SYSDATE)";
+				+ lvo.getUserId() + "', DEFAULT, SYSDATE + 2)";
 
 		try {
 			result = stmt.executeUpdate(query);
@@ -162,7 +162,7 @@ public class LibraryDAO {
 				conn.rollback();
 			}
 		} catch (Exception e) {
-			System.out.println("※ 대여 번호가 중복 됩니다");
+			e.printStackTrace();
 		} finally {
 			try {
 				stmt.close();

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
 
+import com.sun.org.apache.bcel.internal.generic.I2F;
+
 import book.controller.BookController;
 import book.controller.CustomerController;
 import book.controller.LibraryController;
@@ -424,16 +426,13 @@ public class View {
 			sc.nextLine();
 			System.out.print("책 이름 입력 -> ");
 			String bookName = sc.next();
-			LibraryVO lvo1 = lc.rentSearchBookName(bookName);
-			if (lvo1 == null) {
-				System.out.println("※ 대여 할 책이 없습니다");
+			lvo.setBvoBookName(bookName);
+			lvo.setUserId(userId);
+			int result = lc.rentInfoAdd(lvo);
+			if (result > 0) {
+				System.out.println("\n※ 대여를 완료 했습니다");
 			} else {
-				int result = lc.rentInfoAdd(lvo);
-				if (result > 0) {
-					System.out.println("\n※ 대여를 완료 했습니다");
-				} else {
-					System.out.println("※ 대여를 실패 했습니다");
-				}
+				System.out.println("※ 대여를 실패 했습니다");
 			}
 		}
 	}
