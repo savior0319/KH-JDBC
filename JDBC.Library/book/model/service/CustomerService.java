@@ -16,7 +16,7 @@ public class CustomerService {
 	public ArrayList<CustomerVO> customerSearchAll() {
 
 		ArrayList<CustomerVO> aList = new ArrayList<CustomerVO>();
-
+		
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "STUDENT", "STUDENT");
