@@ -4,32 +4,33 @@ import java.util.ArrayList;
 
 import book.model.DAO.BookDAO;
 import book.model.VO.BookVO;
+import book.model.service.BookService;
 
 public class BookController {
 
-	private BookDAO bDao = new BookDAO();
+	private BookService bService = new BookService();
 
 	public ArrayList<BookVO> bookSearchAll() {
-		if (bDao.bookSearchAll().isEmpty()) {
+		if (bService.bookSearchAll().isEmpty()) {
 			return null;
 		} else
-			return bDao.bookSearchAll();
+			return bService.bookSearchAll();
 	}
 
 	public BookVO bookSearchCode(int bookCode) {
-		return bDao.bookSearchCode(bookCode);
+		return bService.bookSearchCode(bookCode);
 	}
 
 	public int bookAdd(BookVO bv) {
-		return bDao.bookAdd(bv);
+		return bService.bookAdd(bv);
 	}
 
 	public int bookDelete(int bookCode) {
-		return bDao.bookDelete(bookCode);
+		return bService.bookDelete(bookCode);
 	}
 
 	public BookVO searchBookName(String bookName) {
-		return bDao.searchBookName(bookName);
+		return bService.searchBookName(bookName);
 	}
 
 }

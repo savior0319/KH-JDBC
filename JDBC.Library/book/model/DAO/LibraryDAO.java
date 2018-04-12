@@ -2,6 +2,7 @@ package book.model.DAO;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -14,19 +15,13 @@ public class LibraryDAO {
 	private Connection conn = null;
 	private Statement stmt = null;
 	private ResultSet rs = null;
+	private PreparedStatement pstmt = null;
 
 	public LibraryDAO() {
 	}
 
-	public ArrayList<LibraryVO> rentManagerAll() {
+	public ArrayList<LibraryVO> rentManagerAll(Connection conn) {
 
-		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "STUDENT", "STUDENT");
-			stmt = conn.createStatement();
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
-		}
 
 		ArrayList<LibraryVO> aList = new ArrayList<LibraryVO>();
 
@@ -34,6 +29,7 @@ public class LibraryDAO {
 				+ " = L.USER_ID AND B.BOOK_NO = L.BOOK_NO";
 
 		try {
+			stmt = conn.createStatement();
 			rs = stmt.executeQuery(query);
 
 			while (rs.next()) {
@@ -51,7 +47,6 @@ public class LibraryDAO {
 			try {
 				rs.close();
 				stmt.close();
-				conn.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -59,22 +54,15 @@ public class LibraryDAO {
 		return aList;
 	}
 
-	public ArrayList<LibraryVO> rentSearchId(String userID) {
+	public ArrayList<LibraryVO> rentSearchId(Connection conn, String userID) {
 
 		ArrayList<LibraryVO> aList = new ArrayList<LibraryVO>();
-
-		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "STUDENT", "STUDENT");
-			stmt = conn.createStatement();
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
-		}
 
 		String query = "SELECT LEASE_NO, L.USER_ID, USER_NAME, BOOK_NAME FROM BOOK B, CUSTOMER C, LIBRARY L WHERE C.USER_ID"
 				+ " = L.USER_ID AND B.BOOK_NO = L.BOOK_NO AND L.USER_ID = '" + userID + "'";
 
 		try {
+			stmt = conn.createStatement();
 			rs = stmt.executeQuery(query);
 
 			while (rs.next()) {
@@ -92,7 +80,6 @@ public class LibraryDAO {
 			try {
 				rs.close();
 				stmt.close();
-				conn.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -100,22 +87,15 @@ public class LibraryDAO {
 		return aList;
 	}
 
-	public LibraryVO rentSearchBookName(String bookName) {
+	public LibraryVO rentSearchBookName(Connection conn, String bookName) {
 
 		LibraryVO lvo = null;
-
-		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "STUDENT", "STUDENT");
-			stmt = conn.createStatement();
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
-		}
 
 		String query = "SELECT LEASE_NO, L.USER_ID, USER_NAME, BOOK_NAME FROM BOOK B, CUSTOMER C, LIBRARY L WHERE C.USER_ID"
 				+ " = L.USER_ID AND B.BOOK_NO = L.BOOK_NO AND BOOK_NAME = '" + bookName + "'";
 
 		try {
+			stmt = conn.createStatement();
 			rs = stmt.executeQuery(query);
 
 			while (rs.next()) {
@@ -139,24 +119,18 @@ public class LibraryDAO {
 		return lvo;
 	}
 
-	public int rentInfoAdd(LibraryVO lvo) {
+	public int rentInfoAdd(Connection conn, LibraryVO lvo) {
 
 		int result = 0;
+		
+		String query = "INSERT INTO LIBRARY VALUES(?, (SELECT BOOK_NO FROM BOOK WHERE BOOK_NAME = ?), ? , DEFAULT, SYSDATE + 2)";
 
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "STUDENT", "STUDENT");
-			stmt = conn.createStatement();
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
-		}
-
-		String query = "INSERT INTO LIBRARY VALUES(" + lvo.getLeaseNo()
-				+ ", (SELECT BOOK_NO FROM BOOK WHERE BOOK_NAME LIKE '" + lvo.getBvoBookName() + "'), '"
-				+ lvo.getUserId() + "', DEFAULT, SYSDATE + 2)";
-
-		try {
-			result = stmt.executeUpdate(query);
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, lvo.getLeaseNo());
+			pstmt.setString(2, lvo.getBvoBookName());
+			pstmt.setString(3, lvo.getUserId());
+			result = pstmt.executeUpdate();
 
 			if (result > 0) {
 				conn.commit();
@@ -167,8 +141,7 @@ public class LibraryDAO {
 			System.out.println("※ 대여 번호가 중복 됩니다");
 		} finally {
 			try {
-				stmt.close();
-				conn.close();
+				pstmt.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

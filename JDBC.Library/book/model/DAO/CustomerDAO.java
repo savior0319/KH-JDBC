@@ -2,6 +2,7 @@ package book.model.DAO;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -14,25 +15,19 @@ public class CustomerDAO {
 	private Connection conn = null;
 	private Statement stmt = null;
 	private ResultSet rs = null;
+	private PreparedStatement pstmt = null;
 
 	public CustomerDAO() {
 	}
 
-	public ArrayList<CustomerVO> customerSearchAll() {
-
-		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "STUDENT", "STUDENT");
-			stmt = conn.createStatement();
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
-		}
+	public ArrayList<CustomerVO> customerSearchAll(Connection conn) {
 
 		ArrayList<CustomerVO> aList = new ArrayList<CustomerVO>();
 
 		String query = "SELECT * FROM CUSTOMER";
 
 		try {
+			stmt = conn.createStatement();
 			rs = stmt.executeQuery(query);
 
 			while (rs.next()) {
@@ -53,7 +48,6 @@ public class CustomerDAO {
 			try {
 				rs.close();
 				stmt.close();
-				conn.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -61,21 +55,14 @@ public class CustomerDAO {
 		return aList;
 	}
 
-	public ArrayList<CustomerVO> customerSearchName(String userName) {
-
-		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "STUDENT", "STUDENT");
-			stmt = conn.createStatement();
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
-		}
+	public ArrayList<CustomerVO> customerSearchName(Connection conn, String userName) {
 
 		ArrayList<CustomerVO> aList = new ArrayList<CustomerVO>();
 
 		String query = "SELECT * FROM CUSTOMER WHERE USER_NAME LIKE '%" + userName + "'";
 
 		try {
+			stmt = conn.createStatement();
 			rs = stmt.executeQuery(query);
 
 			while (rs.next()) {
@@ -96,30 +83,21 @@ public class CustomerDAO {
 			try {
 				rs.close();
 				stmt.close();
-				conn.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
 		return aList;
-
 	}
 
-	public CustomerVO customerSearchId(String userId) {
+	public CustomerVO customerSearchId(Connection conn, String userId) {
 
 		CustomerVO cv = null;
-
-		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "STUDENT", "STUDENT");
-			stmt = conn.createStatement();
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
-		}
 
 		String query = "SELECT * FROM CUSTOMER WHERE USER_ID LIKE '" + userId + "'";
 
 		try {
+			stmt = conn.createStatement();
 			rs = stmt.executeQuery(query);
 
 			while (rs.next()) {
@@ -139,7 +117,6 @@ public class CustomerDAO {
 			try {
 				rs.close();
 				stmt.close();
-				conn.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -147,24 +124,21 @@ public class CustomerDAO {
 		return cv;
 	}
 
-	public int customerSignUp(CustomerVO cv) {
+	public int customerSignUp(Connection conn, CustomerVO cv) {
 
 		int result = 0;
 
-		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "STUDENT", "STUDENT");
-			stmt = conn.createStatement();
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
-		}
-
-		String query = "INSERT INTO CUSTOMER VALUES(" + cv.getUserNo() + ",'" + cv.getUserId() + "','"
-				+ cv.getUserName() + "'," + cv.getUserAge() + ",'" + cv.getAddr() + "','" + cv.getGender()
-				+ "', SYSDATE)";
+		String query = "INSERT INTO CUSTOMER VALUES(?, ?, ?, ?, ?, ?, SYSDATE)";
 
 		try {
-			result = stmt.executeUpdate(query);
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, cv.getUserNo());
+			pstmt.setString(2, cv.getUserId());
+			pstmt.setString(3, cv.getUserName());
+			pstmt.setInt(4, cv.getUserAge());
+			pstmt.setString(5, cv.getAddr());
+			pstmt.setString(6, cv.getGender());
+			result = pstmt.executeUpdate();
 
 			if (result > 0) {
 				conn.commit();
@@ -175,8 +149,7 @@ public class CustomerDAO {
 			e.printStackTrace();
 		} finally {
 			try {
-				stmt.close();
-				conn.close();
+				pstmt.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -184,23 +157,19 @@ public class CustomerDAO {
 		return result;
 	}
 
-	public int customerInfoUpdate(CustomerVO cVo) {
+	public int customerInfoUpdate(Connection conn, CustomerVO cVo) {
 
 		int result = 0;
+		
+		String query = "UPDATE CUSTOMER SET USER_NAME = ?, ADDR = ? WHERE USER_ID = ?";
 
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "STUDENT", "STUDENT");
-			stmt = conn.createStatement();
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
-		}
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, cVo.getUserName());
+			pstmt.setString(2, cVo.getAddr());
+			pstmt.setString(3, cVo.getUserId());
 
-		String query = "UPDATE CUSTOMER SET USER_NAME = '" + cVo.getUserName() + "', ADDR = '" + cVo.getAddr()
-				+ "' WHERE USER_ID LIKE '" + cVo.getUserId() + "'";
-
-		try {
-			result = stmt.executeUpdate(query);
+			result = pstmt.executeUpdate();
 
 			if (result > 0) {
 				conn.commit();
@@ -211,8 +180,7 @@ public class CustomerDAO {
 			e.printStackTrace();
 		} finally {
 			try {
-				stmt.close();
-				conn.close();
+				pstmt.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -221,21 +189,14 @@ public class CustomerDAO {
 
 	}
 
-	public int customerDelete(String userId) {
+	public int customerDelete(Connection conn, String userId) {
 
 		int result = 0;
-
-		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "STUDENT", "STUDENT");
-			stmt = conn.createStatement();
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
-		}
 
 		String query = "DELETE FROM CUSTOMER WHERE USER_ID LIKE '" + userId + "'";
 
 		try {
+			stmt = conn.createStatement();
 			result = stmt.executeUpdate(query);
 
 			if (result > 0) {
@@ -248,7 +209,6 @@ public class CustomerDAO {
 		} finally {
 			try {
 				stmt.close();
-				conn.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

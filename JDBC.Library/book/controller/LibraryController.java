@@ -4,30 +4,31 @@ import java.util.ArrayList;
 
 import book.model.DAO.LibraryDAO;
 import book.model.VO.LibraryVO;
+import book.model.service.LibraryService;
 
 public class LibraryController {
 
-	private LibraryDAO lDao = new LibraryDAO();
+	private LibraryService lService = new LibraryService();
 
 	public LibraryController() {
 	}
 
 	public ArrayList<LibraryVO> rentManagerAll() {
-		if (lDao.rentManagerAll().isEmpty()) {
+		if (lService.rentManagerAll().isEmpty()) {
 			return null;
 		} else
-			return lDao.rentManagerAll();
+			return lService.rentManagerAll();
 	}
 
 	public ArrayList<LibraryVO> rentSearchId(String userID) {
-		return lDao.rentSearchId(userID);
+		return lService.rentSearchId(userID);
 	}
 
 	public LibraryVO rentSearchBookName(String bookName) {
-		return lDao.rentSearchBookName(bookName);
+		return lService.rentSearchBookName(bookName);
 	}
 
 	public int rentInfoAdd(LibraryVO lvo) {
-		return lDao.rentInfoAdd(lvo);
+		return lService.rentInfoAdd(lvo);
 	}
 }
