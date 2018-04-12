@@ -129,13 +129,8 @@ public class LibraryDAO {
 			pstmt.setString(3, lvo.getUserId());
 			result = pstmt.executeUpdate();
 
-			if (result > 0) {
-				conn.commit();
-			} else if (result == 0) {
-				conn.rollback();
-			}
 		} catch (Exception e) {
-			System.out.println("※ 대여 번호가 중복 됩니다");
+			System.out.println("\n※ 대여 번호가 중복 됩니다");
 		} finally {
 			try {
 				pstmt.close();

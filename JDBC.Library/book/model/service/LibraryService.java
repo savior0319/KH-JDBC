@@ -63,6 +63,13 @@ public class LibraryService {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "STUDENT", "STUDENT");
 			result = lDao.rentInfoAdd(conn, lvo);
+			
+			if (result > 0) {
+				conn.commit();
+			} else if (result == 0) {
+				conn.rollback();
+			}
+			
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}

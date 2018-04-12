@@ -103,10 +103,6 @@ public class BookDAO {
 			pstmt.setString(6, bv.getGenre());
 			
 			result = pstmt.executeUpdate();
-			
-			if(result > 0) {
-				conn.commit();
-			} else conn.rollback();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -129,10 +125,6 @@ public class BookDAO {
 		try {
 			stmt = conn.createStatement();
 			result = stmt.executeUpdate(query);
-			
-			if(result > 0) {
-				conn.commit();
-			} else conn.rollback();
 
 		} catch (Exception e) {
 			System.out.println("\n※ 현재 대여 중인 책은 삭제 불가능 합니다");

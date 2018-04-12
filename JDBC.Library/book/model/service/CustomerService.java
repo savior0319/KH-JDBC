@@ -88,6 +88,12 @@ public class CustomerService {
 			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "STUDENT", "STUDENT");
 
 			result = cDao.customerSignUp(conn, cv);
+			
+			if (result > 0) {
+				conn.commit();
+			} else {
+				conn.rollback();
+			}
 
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
@@ -110,6 +116,12 @@ public class CustomerService {
 			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "STUDENT", "STUDENT");
 
 			result = cDao.customerInfoUpdate(conn, cVo);
+			
+			if (result > 0) {
+				conn.commit();
+			} else {
+				conn.rollback();
+			}
 
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
@@ -132,6 +144,12 @@ public class CustomerService {
 			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "STUDENT", "STUDENT");
 
 			result = cDao.customerDelete(conn, userId);
+			
+			if (result > 0) {
+				conn.commit();
+			} else {
+				conn.rollback();
+			}
 
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();

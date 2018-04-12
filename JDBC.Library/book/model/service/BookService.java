@@ -69,6 +69,10 @@ public class BookService {
 			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "STUDENT", "STUDENT");
 
 			result = bDao.bookAdd(conn, bv);
+			
+			if(result > 0) {
+				conn.commit();
+			} else conn.rollback();
 
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
@@ -91,6 +95,10 @@ public class BookService {
 			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "STUDENT", "STUDENT");
 
 			result = bDao.bookDelete(conn, bookCode);
+			
+			if(result > 0) {
+				conn.commit();
+			} else conn.rollback();
 
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();

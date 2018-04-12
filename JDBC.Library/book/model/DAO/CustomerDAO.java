@@ -138,11 +138,6 @@ public class CustomerDAO {
 			pstmt.setString(6, cv.getGender());
 			result = pstmt.executeUpdate();
 
-			if (result > 0) {
-				conn.commit();
-			} else {
-				conn.rollback();
-			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -168,12 +163,7 @@ public class CustomerDAO {
 			pstmt.setString(3, cVo.getUserId());
 
 			result = pstmt.executeUpdate();
-
-			if (result > 0) {
-				conn.commit();
-			} else {
-				conn.rollback();
-			}
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -197,11 +187,6 @@ public class CustomerDAO {
 			stmt = conn.createStatement();
 			result = stmt.executeUpdate(query);
 
-			if (result > 0) {
-				conn.commit();
-			} else {
-				conn.rollback();
-			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

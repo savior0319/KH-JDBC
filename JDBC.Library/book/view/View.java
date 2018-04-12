@@ -91,12 +91,12 @@ public class View {
 			System.out.println("\n※ 조회 할 책 정보가 없습니다");
 		} else {
 			System.out.println("\n전체 책 조회");
-			System.out.println("────────────────────────────────" + "──────────────────────────────────────");
+			System.out.println("──────────────────────────────────────────────────────────────────────");
 			Iterator<BookVO> it = aList.iterator();
 			while (it.hasNext()) {
 				System.out.println(it.next().toString());
 			}
-			System.out.println("───────────────────────────────" + "───────────────────────────────────────");
+			System.out.println("──────────────────────────────────────────────────────────────────────");
 			System.out.println("※ 조회완료\n");
 		}
 	}
@@ -109,9 +109,9 @@ public class View {
 			System.out.println("\n※ 입력한 번호의 책이 없습니다");
 		} else {
 			System.out.println("\n입력한 '" + bookCode + "' 책 조회");
-			System.out.println("────────────────────────────────" + "──────────────────────────────────────");
+			System.out.println("──────────────────────────────────────────────────────────────────────");
 			System.out.println(bv.toString());
-			System.out.println("───────────────────────────────" + "───────────────────────────────────────");
+			System.out.println("──────────────────────────────────────────────────────────────────────");
 			System.out.println("※ 조회완료\n");
 		}
 	}
@@ -205,12 +205,12 @@ public class View {
 			System.out.println("\n※ 조회 할 회원이 없습니다");
 		} else {
 			System.out.println("\n전체 회원 조회");
-			System.out.println("────────────────────────────────" + "──────────────────────────────────────");
+			System.out.println("──────────────────────────────────────────────────────────────────────");
 			Iterator<CustomerVO> it = aList.iterator();
 			while (it.hasNext()) {
 				System.out.println(it.next().toString());
 			}
-			System.out.println("───────────────────────────────" + "───────────────────────────────────────");
+			System.out.println("──────────────────────────────────────────────────────────────────────");
 			System.out.println("※ 조회완료\n");
 		}
 	}
@@ -223,12 +223,12 @@ public class View {
 			System.out.println("\n 이름에 '" + userName + "' 이(가) 들어간 회원이 없습니다");
 		} else {
 			System.out.println("\n※이름에 '" + userName + "' 이(가) 들어간 회원 조회");
-			System.out.println("────────────────────────────────" + "──────────────────────────────────────");
+			System.out.println("──────────────────────────────────────────────────────────────────────");
 			Iterator<CustomerVO> it = aList.iterator();
 			while (it.hasNext()) {
 				System.out.println(it.next().toString());
 			}
-			System.out.println("───────────────────────────────" + "───────────────────────────────────────");
+			System.out.println("──────────────────────────────────────────────────────────────────────");
 			System.out.println("※ 조회완료\n");
 		}
 	}
@@ -360,12 +360,12 @@ public class View {
 			System.out.println("\n※ 대여 정보가 없습니다");
 		} else {
 			System.out.println("\n※ 대여 정보 조회");
-			System.out.println("────────────────────────────────" + "──────────────────────────────────────");
+			System.out.println("──────────────────────────────────────────────────────────────────────");
 			Iterator<LibraryVO> it = aList.iterator();
 			while (it.hasNext()) {
 				System.out.println(it.next().toString());
 			}
-			System.out.println("───────────────────────────────" + "───────────────────────────────────────");
+			System.out.println("──────────────────────────────────────────────────────────────────────");
 			System.out.println("※ 조회완료\n");
 		}
 	}
@@ -379,12 +379,12 @@ public class View {
 			System.out.println("\n※ 대여 조회를 할 '" + userId + "' 아이디를 가진 회원이 없습니다");
 		} else {
 			System.out.println("\n※ 대여 정보 조회");
-			System.out.println("────────────────────────────────" + "──────────────────────────────────────");
+			System.out.println("──────────────────────────────────────────────────────────────────────");
 			Iterator<LibraryVO> it = aList.iterator();
 			while (it.hasNext()) {
 				System.out.println(it.next().toString());
 			}
-			System.out.println("───────────────────────────────" + "───────────────────────────────────────");
+			System.out.println("──────────────────────────────────────────────────────────────────────");
 			System.out.println("※ 조회완료\n");
 		}
 	}
