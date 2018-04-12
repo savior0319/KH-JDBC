@@ -1,7 +1,6 @@
 package book.model.DAO;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,7 +11,6 @@ import book.model.VO.CustomerVO;
 
 public class CustomerDAO {
 
-	private Connection conn = null;
 	private Statement stmt = null;
 	private ResultSet rs = null;
 	private PreparedStatement pstmt = null;

@@ -1,7 +1,6 @@
 package book.model.DAO;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,7 +11,6 @@ import book.model.VO.LibraryVO;
 
 public class LibraryDAO {
 
-	private Connection conn = null;
 	private Statement stmt = null;
 	private ResultSet rs = null;
 	private PreparedStatement pstmt = null;
@@ -21,7 +19,6 @@ public class LibraryDAO {
 	}
 
 	public ArrayList<LibraryVO> rentManagerAll(Connection conn) {
-
 
 		ArrayList<LibraryVO> aList = new ArrayList<LibraryVO>();
 
@@ -122,7 +119,7 @@ public class LibraryDAO {
 	public int rentInfoAdd(Connection conn, LibraryVO lvo) {
 
 		int result = 0;
-		
+
 		String query = "INSERT INTO LIBRARY VALUES(?, (SELECT BOOK_NO FROM BOOK WHERE BOOK_NAME = ?), ? , DEFAULT, SYSDATE + 2)";
 
 		try {

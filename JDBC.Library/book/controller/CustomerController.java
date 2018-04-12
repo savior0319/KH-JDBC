@@ -2,13 +2,11 @@ package book.controller;
 
 import java.util.ArrayList;
 
-import book.model.DAO.CustomerDAO;
 import book.model.VO.CustomerVO;
 import book.model.service.CustomerService;
 
 public class CustomerController {
 
-	private CustomerDAO cDao = new CustomerDAO();
 	private CustomerService cService = new CustomerService();
 
 	public CustomerController() {
