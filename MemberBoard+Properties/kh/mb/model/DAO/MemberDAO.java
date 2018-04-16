@@ -34,7 +34,7 @@ public class MemberDAO {
 			System.out.println(selectAll);
 			// pstmt = conn.prepareStatement(selectAll);
 			// pstmt.setString(1, "MEMBER");
-			
+
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(selectAll);
 
@@ -63,11 +63,15 @@ public class MemberDAO {
 	public MemberVo memberSearchId(Connection conn, String memberId) {
 
 		MemberVo mv = null;
-		String query = "SELECT * FROM MEMBER WHERE MEMBER_ID = '" + memberId + "'";
 
 		try {
-			stmt = conn.createStatement();
-			rs = stmt.executeQuery(query);
+			Properties pp = new Properties();
+			pp.load(new FileReader("C:\\workspace\\KH-JDBC\\MemberBoard+Properties\\resource\\query.properties"));
+			String selectOne = pp.getProperty("selectOne");
+
+			pstmt = conn.prepareStatement(selectOne);
+			pstmt.setString(1, memberId);
+			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
 				mv = new MemberVo();
@@ -80,11 +84,11 @@ public class MemberDAO {
 				mv.setPhone(rs.getString("PHONE"));
 				mv.setEnrollDate(rs.getDate("ENROLL_DATE"));
 			}
-		} catch (SQLException e) {
+		} catch (SQLException | IOException e) {
 			e.printStackTrace();
 		} finally {
 			JDBCTemplate.close(rs);
-			JDBCTemplate.close(stmt);
+			JDBCTemplate.close(pstmt);
 		}
 		return mv;
 	}
