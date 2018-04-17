@@ -11,6 +11,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import kh.mb.Exception.MemberBoardException;
 import kh.mb.common.JDBCTemplate;
 import kh.mb.model.VO.MemberVo;
 
@@ -20,10 +21,11 @@ public class MemberDAO {
 	private PreparedStatement pstmt = null;
 	private ResultSet rs = null;
 	private Properties pp = new Properties();
+	private final String PATH = "C:\\workspace\\KH-JDBC\\MemberBoard+Properties+Exception\\resource\\query.properties";
 
 	public MemberDAO() {
 		try {
-			pp.load(new FileReader("C:\\workspace\\KH-JDBC\\MemberBoard+Properties\\resource\\query.properties"));
+			pp.load(new FileReader(PATH));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -31,7 +33,7 @@ public class MemberDAO {
 		}
 	}
 
-	public ArrayList<MemberVo> memberSearchAll(Connection conn) {
+	public ArrayList<MemberVo> memberSearchAll(Connection conn) throws MemberBoardException {
 
 		ArrayList<MemberVo> aList = new ArrayList<MemberVo>();
 
@@ -55,7 +57,8 @@ public class MemberDAO {
 				aList.add(mv);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println("DAO : " + e.getMessage());
+			throw new MemberBoardException("DAO클래스의 memberSearchAll() 메소드 실행불가 " + e.getMessage());
 		} finally {
 			JDBCTemplate.close(rs);
 			JDBCTemplate.close(stmt);

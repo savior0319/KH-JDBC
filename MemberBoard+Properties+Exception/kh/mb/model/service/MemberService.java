@@ -3,6 +3,7 @@ package kh.mb.model.service;
 import java.sql.Connection;
 import java.util.ArrayList;
 
+import kh.mb.Exception.MemberBoardException;
 import kh.mb.common.JDBCTemplate;
 import kh.mb.model.DAO.MemberDAO;
 import kh.mb.model.VO.MemberVo;
@@ -12,7 +13,7 @@ public class MemberService {
 	private Connection conn = null;
 	private MemberDAO mDao = new MemberDAO();
 
-	public ArrayList<MemberVo> memberSearchAll() {
+	public ArrayList<MemberVo> memberSearchAll() throws MemberBoardException {
 		conn = JDBCTemplate.getConnect(conn);
 		ArrayList<MemberVo> aList = mDao.memberSearchAll(conn);
 		JDBCTemplate.close(conn);

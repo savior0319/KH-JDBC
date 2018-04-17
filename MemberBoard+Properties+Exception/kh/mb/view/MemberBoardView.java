@@ -85,7 +85,7 @@ public class MemberBoardView {
 	public void memberSearchAll() {
 		ArrayList<MemberVo> aList = mc.memberSearchAll();
 		if (aList == null) {
-			System.out.println("\n※ 조회할 회원이 없습니다");
+			System.out.println("※ 조회할 회원이 없습니다");
 		} else {
 			Iterator<MemberVo> it = aList.iterator();
 			System.out.println("\n전체 회원 조회");

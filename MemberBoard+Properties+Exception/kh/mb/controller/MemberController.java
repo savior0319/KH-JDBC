@@ -2,6 +2,7 @@ package kh.mb.controller;
 
 import java.util.ArrayList;
 
+import kh.mb.Exception.MemberBoardException;
 import kh.mb.model.VO.MemberVo;
 import kh.mb.model.service.MemberService;
 
@@ -13,8 +14,14 @@ public class MemberController {
 	}
 
 	public ArrayList<MemberVo> memberSearchAll() {
-		ArrayList<MemberVo> aList = ms.memberSearchAll();
-		if (aList.isEmpty()) {
+		ArrayList<MemberVo> aList = null;
+		try {
+			aList = ms.memberSearchAll();
+		} catch (MemberBoardException e) {
+			System.out.println("※ Controller : 전체 회원 조회 실패");
+			System.out.println(e.getMessage());
+		}
+		if (aList == null) {
 			return null;
 		} else
 			return aList;
@@ -42,7 +49,6 @@ public class MemberController {
 		int result = ms.memberInfoModify(mvm);
 		return result;
 	}
-
 
 	public int memberDelete(String memberId) {
 		int result = ms.memberDelete(memberId);

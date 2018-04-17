@@ -22,7 +22,7 @@ public class JDBCTemplate {
 	public static Connection getConnect(Connection conn) {
 		try {
 			Properties pp = new Properties();
-			pp.load(new FileReader("C:\\workspace\\KH-JDBC\\MemberBoard+Properties\\resource\\driver.properties"));
+			pp.load(new FileReader("C:\\workspace\\KH-JDBC\\MemberBoard+Properties+Exception\\resource\\driver.properties"));
 			String driver = pp.getProperty("driver");
 			String url = pp.getProperty("url");
 			String user = pp.getProperty("user");
@@ -31,7 +31,7 @@ public class JDBCTemplate {
 			conn = DriverManager.getConnection(url, user, password);
 			conn.setAutoCommit(false);
 		} catch (ClassNotFoundException | SQLException | IOException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
 		return conn;
 	}
@@ -40,7 +40,7 @@ public class JDBCTemplate {
 		try {
 			conn.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
 	}
 
@@ -48,7 +48,9 @@ public class JDBCTemplate {
 		try {
 			rs.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
+		} catch (NullPointerException e) {
+			System.out.println("JDBCTemplate : " + e.getMessage());
 		}
 	}
 
@@ -56,7 +58,7 @@ public class JDBCTemplate {
 		try {
 			stmt.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
 	}
 
@@ -64,7 +66,7 @@ public class JDBCTemplate {
 		try {
 			conn.commit();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
 	}
 
@@ -72,7 +74,7 @@ public class JDBCTemplate {
 		try {
 			conn.rollback();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
 	}
 }
