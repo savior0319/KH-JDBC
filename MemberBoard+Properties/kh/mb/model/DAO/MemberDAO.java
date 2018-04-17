@@ -19,8 +19,16 @@ public class MemberDAO {
 	private Statement stmt = null;
 	private PreparedStatement pstmt = null;
 	private ResultSet rs = null;
+	private Properties pp = new Properties();
 
 	public MemberDAO() {
+		try {
+			pp.load(new FileReader("C:\\workspace\\KH-JDBC\\MemberBoard+Properties\\resource\\query.properties"));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public ArrayList<MemberVo> memberSearchAll(Connection conn) {
@@ -28,79 +36,10 @@ public class MemberDAO {
 		ArrayList<MemberVo> aList = new ArrayList<MemberVo>();
 
 		try {
-			Properties pp = new Properties();
-			pp.load(new FileReader("C:\\workspace\\KH-JDBC\\MemberBoard+Properties\\resource\\query.properties"));
-			String selectAll = pp.getProperty("selectAll");
-			System.out.println(selectAll);
-			// pstmt = conn.prepareStatement(selectAll);
-			// pstmt.setString(1, "MEMBER");
+			String selectAll = pp.getProperty("memberSearchAll");
 
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(selectAll);
-
-			while (rs.next()) {
-				MemberVo mv = new MemberVo();
-				mv.setMemberNo(rs.getInt("MEMBER_NO"));
-				mv.setMemberId(rs.getString("MEMBER_ID"));
-				mv.setMemberPwd(rs.getString("MEMBER_PWD"));
-				mv.setMemberName(rs.getString("MEMBER_NAME"));
-				mv.setEmail(rs.getString("EMAIL"));
-				mv.setAddress(rs.getString("ADDRESS"));
-				mv.setPhone(rs.getString("PHONE"));
-				mv.setEnrollDate(rs.getDate("ENROLL_DATE"));
-
-				aList.add(mv);
-			}
-		} catch (SQLException | IOException e) {
-			e.printStackTrace();
-		} finally {
-			JDBCTemplate.close(rs);
-			JDBCTemplate.close(stmt);
-		}
-		return aList;
-	}
-
-	public MemberVo memberSearchId(Connection conn, String memberId) {
-
-		MemberVo mv = null;
-
-		try {
-			Properties pp = new Properties();
-			pp.load(new FileReader("C:\\workspace\\KH-JDBC\\MemberBoard+Properties\\resource\\query.properties"));
-			String selectOne = pp.getProperty("selectOne");
-
-			pstmt = conn.prepareStatement(selectOne);
-			pstmt.setString(1, memberId);
-			rs = pstmt.executeQuery();
-
-			while (rs.next()) {
-				mv = new MemberVo();
-				mv.setMemberNo(rs.getInt("MEMBER_NO"));
-				mv.setMemberId(rs.getString("MEMBER_ID"));
-				mv.setMemberPwd(rs.getString("MEMBER_PWD"));
-				mv.setMemberName(rs.getString("MEMBER_NAME"));
-				mv.setEmail(rs.getString("EMAIL"));
-				mv.setAddress(rs.getString("ADDRESS"));
-				mv.setPhone(rs.getString("PHONE"));
-				mv.setEnrollDate(rs.getDate("ENROLL_DATE"));
-			}
-		} catch (SQLException | IOException e) {
-			e.printStackTrace();
-		} finally {
-			JDBCTemplate.close(rs);
-			JDBCTemplate.close(pstmt);
-		}
-		return mv;
-	}
-
-	public ArrayList<MemberVo> memberSearchName(Connection conn, String memberName) {
-
-		ArrayList<MemberVo> aList = new ArrayList<MemberVo>();
-		String query = "SELECT * FROM MEMBER WHERE MEMBER_NAME = '" + memberName + "'";
-
-		try {
-			stmt = conn.createStatement();
-			rs = stmt.executeQuery(query);
 
 			while (rs.next()) {
 				MemberVo mv = new MemberVo();
@@ -124,12 +63,77 @@ public class MemberDAO {
 		return aList;
 	}
 
-	public int memberSearchName(Connection conn, MemberVo mv) {
+	public MemberVo memberSearchId(Connection conn, String memberId) {
 
-		int result = 0;
-		String query = "INSERT INTO MEMBER VALUES(MEMBER_NO.NEXTVAL, ?, ?, ?, ?, ?, ?, SYSDATE)";
+		MemberVo mv = null;
 
 		try {
+			String query = pp.getProperty("memberSearchId");
+
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, memberId);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				mv = new MemberVo();
+				mv.setMemberNo(rs.getInt("MEMBER_NO"));
+				mv.setMemberId(rs.getString("MEMBER_ID"));
+				mv.setMemberPwd(rs.getString("MEMBER_PWD"));
+				mv.setMemberName(rs.getString("MEMBER_NAME"));
+				mv.setEmail(rs.getString("EMAIL"));
+				mv.setAddress(rs.getString("ADDRESS"));
+				mv.setPhone(rs.getString("PHONE"));
+				mv.setEnrollDate(rs.getDate("ENROLL_DATE"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JDBCTemplate.close(rs);
+			JDBCTemplate.close(pstmt);
+		}
+		return mv;
+	}
+
+	public ArrayList<MemberVo> memberSearchName(Connection conn, String memberName) {
+
+		ArrayList<MemberVo> aList = new ArrayList<MemberVo>();
+
+		try {
+			String query = pp.getProperty("memberSearchName");
+
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, memberName);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				MemberVo mv = new MemberVo();
+				mv.setMemberNo(rs.getInt("MEMBER_NO"));
+				mv.setMemberId(rs.getString("MEMBER_ID"));
+				mv.setMemberPwd(rs.getString("MEMBER_PWD"));
+				mv.setMemberName(rs.getString("MEMBER_NAME"));
+				mv.setEmail(rs.getString("EMAIL"));
+				mv.setAddress(rs.getString("ADDRESS"));
+				mv.setPhone(rs.getString("PHONE"));
+				mv.setEnrollDate(rs.getDate("ENROLL_DATE"));
+
+				aList.add(mv);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JDBCTemplate.close(rs);
+			JDBCTemplate.close(pstmt);
+		}
+		return aList;
+	}
+
+	public int memberSignUp(Connection conn, MemberVo mv) {
+
+		int result = 0;
+
+		try {
+			String query = pp.getProperty("memberSignUp");
+
 			pstmt = conn.prepareStatement(query);
 			pstmt.setString(1, mv.getMemberId());
 			pstmt.setString(2, mv.getMemberPwd());
@@ -150,14 +154,14 @@ public class MemberDAO {
 	public int memberInfoModify(Connection conn, MemberVo mvm) {
 
 		int result = 0;
-		String query = "UPDATE MEMBER SET ADDRESS = ?, PHONE = ?, EMAIL =? WHERE MEMBER_ID = '" + mvm.getMemberId()
-				+ "'";
 
 		try {
+			String query = pp.getProperty("memberInfoModify");
 			pstmt = conn.prepareStatement(query);
 			pstmt.setString(1, mvm.getAddress());
 			pstmt.setString(2, mvm.getPhone());
 			pstmt.setString(3, mvm.getEmail());
+			pstmt.setString(4, mvm.getMemberId());
 
 			result = pstmt.executeUpdate();
 		} catch (Exception e) {
@@ -171,9 +175,9 @@ public class MemberDAO {
 	public int memberDelete(Connection conn, String memberId) {
 
 		int result = 0;
-		String query = "DELETE FROM MEMBER WHERE MEMBER_ID = ?";
 
 		try {
+			String query = pp.getProperty("memberDelete");
 			pstmt = conn.prepareStatement(query);
 			pstmt.setString(1, memberId);
 

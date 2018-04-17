@@ -35,7 +35,7 @@ public class MemberService {
 
 	public int memberSignUp(MemberVo mv) {
 		conn = JDBCTemplate.getConnect(conn);
-		int result = mDao.memberSearchName(conn, mv);
+		int result = mDao.memberSignUp(conn, mv);
 		if (result > 0) {
 			JDBCTemplate.commit(conn);
 		} else
